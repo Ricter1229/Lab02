@@ -1,0 +1,142 @@
+//實驗一
+/*LED向左及向右進行花色展示*/
+
+	//使用的LED腳位
+	const byte LEDs[] = {2, 3, 4, 5, 8, 9, 10, 11};
+	const byte total = sizeof(LEDs);
+
+	//計數用變數
+	int index = 0;
+
+	void setup()  {
+		//設置LED腳位
+		for(index = 0; index < total; index++) {
+			pinMode(LEDs[index], OUTPUT);
+		}
+		  
+		 //開始時使所有LED燈滅
+		for(index = 0; index < total; index++) {
+			digitalWrite(LEDs[index], LOW);
+		}
+	}
+	void loop()  {
+		//使LED一路從左側輪流亮滅至右側
+		for(index = 0; index < total; index++) {
+			digitalWrite(LEDs[index], HIGH);
+			delay(200);
+			digitalWrite(LEDs[index], LOW);
+		}  
+		delay(200);
+			
+		//使LED一路從右側輪流亮滅至左側
+		for(index = total - 1; index >= 0; index--) {
+			digitalWrite(LEDs[index], HIGH);
+			delay(200);
+			digitalWrite(LEDs[index], LOW);
+		}
+		delay(200);
+	}
+
+//實驗二
+/*LED自訂花色展示*/
+
+	/*所有LED亮滅2次→使LED一路從左側輪流亮滅至右側→所有LED亮滅2次→使LED一路從右側輪流亮滅至左側*/
+
+	//使用的LED腳位
+	const byte LEDs[] = {2, 3, 4, 5, 8, 9, 10, 11};
+	const byte total = sizeof(LEDs);
+
+	//計數、判斷用變數
+	int index = 0;
+	boolean check_mode = false;
+
+	//設置LED腳位
+	void setup() {
+		for(index = 0; index < total; index++) {
+			pinMode(LEDs[index], OUTPUT);
+		}
+	}
+
+	void loop() {
+		//所有LED亮滅2次
+		for(int i = 0; i < 2; i++) {
+			for(index = 0; index < total; index++) {
+				digitalWrite(LEDs[index], HIGH);
+			}
+			delay(200);
+			for(index = 0; index < total; index++) {
+				digitalWrite(LEDs[index], LOW);
+			}
+			delay(200);
+		}
+
+		//使LED一路從左側輪流亮滅至右側
+		if(check_mode == false) {
+			for(index = 0; index < total; index++) {
+				digitalWrite(LEDs[index], HIGH);
+				delay(200);
+				digitalWrite(LEDs[index], LOW);
+			}
+			check_mode = true;
+		}
+		//使LED一路從右側輪流亮滅至左側
+		else if(check_mode == true) {
+			for(index = total - 1; index >= 0; index--) {
+				digitalWrite(LEDs[index], HIGH);
+				delay(200);
+				digitalWrite(LEDs[index], LOW);
+			}
+			check_mode = false;
+		}
+	}
+
+//實驗三
+/*開關on:自訂花色展示；開關off:向左及向右進行花色展示*/
+
+	//使用的LED腳位
+	const byte LEDs[] = {2,3,4,5,8,9,10,11};
+	const byte total = sizeof(LEDs);
+
+	//計數、判斷用變數
+	int index = 0;
+
+	//設置輸入/輸出腳位
+	void setup() {
+		for(index = 0; index < total; index++) {
+			pinMode(LEDs[index], OUTPUT);
+		}
+		pinMode(6, INPUT);
+		digitalWrite(6, HIGH);
+	}
+
+	void loop() {
+		//判斷按鈕是否被按下
+		boolean check_switch = digitalRead(6);  
+		if(check_switch == HIGH) {
+			//防彈跳
+			delay(200);
+			//自訂花色:由外向裡展示，再從裡向外展示
+			for(index = 0; index < total; index++) {
+				digitalWrite(LEDs[index], HIGH);
+				digitalWrite(LEDs[total – index - 1], HIGH);
+				delay(200);
+				digitalWrite(LEDs[index], LOW);
+				digitalWrite(LEDs[total – index - 1], LOW);
+			 }
+		}
+		else {
+			//向左及向右進行花色展示
+			//向左
+			for(index = total - 1; index >= 0; index--) {
+				digitalWrite(LEDs[index], HIGH);
+				delay(200);
+				digitalWrite(LEDs[index], LOW);
+			}
+			//向右
+			for(index = 0; index < total; index++) {
+				digitalWrite(LEDs[index], HIGH);
+				delay(200);              
+				digitalWrite(LEDs[index], LOW);
+			}
+		}
+	}
